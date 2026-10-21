@@ -1,0 +1,56 @@
+{%- comment -%}
+One publication (blueprint 5.5, A11, D69). Params: pub, kind (journal | conference | in_preparation).
+Buttons render only when they have a target. Manuscripts get a status pill and no thumbnail.
+{%- endcomment -%}
+{%- assign pub = include.pub -%}
+{%- assign pui = site.data.ui.publications -%}
+{%- assign published = true -%}
+{%- if include.kind == "in_preparation" -%}{%- assign published = false -%}{%- endif -%}
+{%- assign doi_url = "" -%}
+{%- if pub.doi and pub.doi != "" -%}{%- assign doi_url = pub.doi | prepend: "https://doi.org/" -%}{%- endif -%}
+{%- assign pdf_url = "" -%}
+{%- if pub.pdf and pub.pdf != "" -%}{%- assign pdf_url = pub.pdf | relative_url -%}{%- endif -%}
+{%- assign thumb_link = "" -%}
+{%- if pdf_url != "" -%}{%- assign thumb_link = pdf_url -%}
+{%- elsif doi_url != "" -%}{%- assign thumb_link = doi_url -%}
+{%- elsif pub.url and pub.url != "" -%}{%- assign thumb_link = pub.url -%}{%- endif -%}
+{%- assign proj = nil -%}
+{%- if pub.project and pub.project != "" -%}{%- assign proj = site.projects | where: "slug", pub.project | first -%}{%- endif -%}
+{%- assign show_thumb = false -%}
+{%- if published and pub.thumb and pub.thumb != "" -%}{%- assign show_thumb = true -%}{%- endif -%}
+<li class="pub{% if show_thumb %} pub-has-thumb{% endif %}">
+  {%- if show_thumb -%}
+    {%- capture thumb_img %}<img src="{{ pub.thumb | relative_url }}" alt="{{ site.data.ui.alt.pub_thumb_prefix | append: ' ' | append: pub.title | escape }}"{% include img-attrs.html src=pub.thumb %} loading="lazy" decoding="async">{% endcapture -%}
+    {%- if thumb_link != "" %}
+  <a class="pub-thumb" href="{{ thumb_link }}">{{ thumb_img }}</a>
+    {%- else %}
+  <span class="pub-thumb">{{ thumb_img }}</span>
+    {%- endif -%}
+  {%- endif %}
+  <div class="pub-body">
+    <p class="pub-authors">{{ pub.authors | escape | replace: "S. Hosseini", "<strong>S. Hosseini</strong>" }}</p>
+    <p class="pub-title">{{ pub.title }}</p>
+    {%- if published %}
+    <p class="pub-venue">
+      {%- if pub.venue and pub.venue != "" %}<span>{{ pub.venue }}</span>{% endif -%}
+      {%- if pub.venue and pub.venue != "" and pub.year %}<span class="sep">, </span>{% endif -%}
+      {%- if pub.year %}<span>{{ pub.year }}</span>{% endif -%}
+    </p>
+    {%- endif -%}
+    {%- if pub.presentation == "oral" %}
+    <p class="pub-flags"><span class="badge">{{ pui.oral }}</span></p>
+    {%- endif -%}
+    {%- if pub.status and pub.status != "" %}
+    <p class="pub-flags"><span class="pill">{{ pui.status[pub.status] | default: pub.status }}</span></p>
+    {%- endif -%}
+    {%- capture buttons -%}
+      {%- if pdf_url != "" %}<li><a class="btn-sm" href="{{ pdf_url }}">{{ pui.pdf }}</a></li>{% endif -%}
+      {%- if doi_url != "" %}<li><a class="btn-sm" href="{{ doi_url }}">{{ pui.doi }}</a></li>
+      {%- elsif pub.url and pub.url != "" %}<li><a class="btn-sm" href="{{ pub.url }}">{{ pui.link }}</a></li>{% endif -%}
+      {%- if proj %}<li><a class="btn-sm" href="{{ proj.url | relative_url }}">{{ pui.project }}</a></li>{% endif -%}
+    {%- endcapture -%}
+    {%- if buttons != "" %}
+    <ul class="pub-buttons">{{ buttons }}</ul>
+    {%- endif %}
+  </div>
+</li>

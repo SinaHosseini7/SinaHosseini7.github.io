@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}" dir="{{ site.dir | default: 'ltr' }}">
+<head>
+{% include head.html %}
+</head>
+<body class="layout-{{ page.layout | default: 'default' }}">
+<a class="skip-link" href="#main">{{ site.data.ui.skip_to_content }}</a>
+{% include header.html %}
+<main id="main" class="site-main" tabindex="-1">
+<div class="wrap">
+{{ content }}
+</div>
+</main>
+{% include footer.html %}
+</body>
+</html>

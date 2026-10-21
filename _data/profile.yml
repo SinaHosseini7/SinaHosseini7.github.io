@@ -1,0 +1,13 @@
+name: Sina Hosseini
+tagline: "Chemical engineer working on heat transfer, CFD, and thermal insulation"
+city: Karaj, Iran
+email: sinahosseini2525@gmail.com
+photo: /assets/img/profile.webp
+cv_pdf: /assets/files/Sina_Hosseini_CV.pdf  # TBD: updated CV PDF (see OI-11)
+links:
+  github: "https://github.com/sinahosseini7"
+  linkedin: "https://www.linkedin.com/in/sina-hosseini1"
+  orcid: "https://orcid.org/0009-0006-7822-7709"
+  scholar: "https://scholar.google.com/citations?user=Fy-zoVIAAAAJ"
+show_scholar: true
+meta_description: "Sina Hosseini, chemical engineer working on heat transfer, CFD, thermal insulation, and thermal management. Research, projects, publications, CV."

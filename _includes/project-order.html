@@ -1,0 +1,9 @@
+{%- comment -%}
+Builds "ordered_projects": the Projects index order (D69): groups in ui.projects.groups order,
+then by "order" inside each group. Used by the Projects index, Home featured cards and previous/next.
+{%- endcomment -%}
+{%- assign ordered_projects = "" | split: "" -%}
+{%- for g in site.data.ui.projects.groups -%}
+  {%- assign group_items = site.projects | where: "group", g[0] | sort: "order" -%}
+  {%- assign ordered_projects = ordered_projects | concat: group_items -%}
+{%- endfor -%}

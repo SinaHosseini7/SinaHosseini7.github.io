@@ -1,0 +1,8 @@
+- title: "Programming"
+  bullets: ["Python (NumPy, Matplotlib, VTK)", "MicroPython", "C", "MATLAB", "Git"]
+- title: "Simulation & CAD"
+  bullets: ["FloEFD", "STAR-CCM+", "CATIA", "SolidWorks", "Solid Edge", "Proteus"]
+- title: "Experimental"
+  bullets: ["FTIR", "BET", "XRF", "XRD", "Titration", "Thermal imaging", "Heat-conduction testing", "Leaching and precipitation"]
+- title: "Other"
+  bullets: ["Electronics and circuit prototyping", "Technical writing", "Project management (Trello)", "Literature and patent searching (EndNote)"]

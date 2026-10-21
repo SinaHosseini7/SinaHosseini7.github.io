@@ -1,0 +1,76 @@
+# Site settings for Jekyll and GitHub Pages.
+# Most text lives in _data/*.yml. Read README.md before you edit this file.
+
+title: Sina Hosseini
+# Keep tagline and description identical to profile.yml "tagline" and "meta_description" (D67).
+tagline: "Chemical engineer working on heat transfer, CFD, and thermal insulation"
+description: "Sina Hosseini, chemical engineer working on heat transfer, CFD, thermal insulation, and thermal management. Research, projects, publications, CV."
+# Used only in the Person structured data (JSON-LD) for search engines (B3).
+job_title: "Chemical Engineer"
+
+url: "https://sinahosseini7.github.io"
+baseurl: ""
+
+lang: en
+dir: ltr
+
+# No theme: every layout and style is in this repository (B11).
+theme: null
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  gfm_quirks: paragraph_end
+  math_engine: mathjax
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    default_lang: plaintext
+
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+defaults:
+  # Default social preview image (B14). Keep "alt" identical to ui.yml alt.og_image.
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /assets/img/og-image.png
+        alt: "Sina Hosseini, chemical engineer, with tagline"
+  # Every project file uses the project layout (B1).
+  - scope:
+      path: ""
+      type: projects
+    values:
+      layout: project
+  # The CV PDF is not listed in sitemap.xml (A13).
+  - scope:
+      path: "assets/files/Sina_Hosseini_CV.pdf"
+    values:
+      sitemap: false
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - _tools
+  - qa
+  - vendor
+  - node_modules
+  - package.json
+  - package-lock.json
+  - .bundle
+  - .sass-cache
+  - .jekyll-cache
+  - .jekyll-metadata
+  - gemfiles
+  - CNAME
+  - LICENSE
+  - "*.zip"

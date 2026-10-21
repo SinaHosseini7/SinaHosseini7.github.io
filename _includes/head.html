@@ -1,0 +1,25 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  /* Runs before the stylesheet so the page never flashes the wrong theme (blueprint 9.3, B10). */
+  (function () {
+    var d = document.documentElement, t = null;
+    d.className += " js";
+    try { t = window.localStorage.getItem("theme"); } catch (e) { t = null; }
+    if (t !== "light" && t !== "dark") {
+      t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    d.setAttribute("data-theme", t);
+  })();
+</script>
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{%- assign fonts_css = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" %}
+<link rel="stylesheet" href="{{ fonts_css }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ fonts_css }}"></noscript>
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+<link rel="icon" href="{{ '/assets/img/favicon.svg' | relative_url }}" type="image/svg+xml">
+{% seo %}
+{% include json-ld.html %}
+<script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>

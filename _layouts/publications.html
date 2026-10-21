@@ -1,0 +1,45 @@
+---
+layout: default
+---
+{%- assign pui = site.data.ui.publications -%}
+{%- assign pubs = site.data.publications -%}
+<article class="page page-publications">
+  <header class="page-head measure">
+    <h1>{{ page.title }}</h1>
+  </header>
+  <div class="prose measure intro">
+{{ content }}
+  </div>
+  {%- if pubs.journal and pubs.journal.size > 0 -%}
+  {%- assign items = pubs.journal | sort: "year" | reverse %}
+  <section class="pub-section measure" aria-labelledby="pubs-journal">
+    <h2 id="pubs-journal" class="section-title">{{ pui.journal }}</h2>
+    <ul class="pub-list">
+      {%- for pub in items %}
+      {% include pub-item.html pub=pub kind="journal" %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif -%}
+  {%- if pubs.conference and pubs.conference.size > 0 -%}
+  {%- assign items = pubs.conference | sort: "year" | reverse %}
+  <section class="pub-section measure" aria-labelledby="pubs-conference">
+    <h2 id="pubs-conference" class="section-title">{{ pui.conference }}</h2>
+    <ul class="pub-list">
+      {%- for pub in items %}
+      {% include pub-item.html pub=pub kind="conference" %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif -%}
+  {%- if pubs.in_preparation and pubs.in_preparation.size > 0 %}
+  <section class="pub-section measure" aria-labelledby="pubs-in-preparation">
+    <h2 id="pubs-in-preparation" class="section-title">{{ pui.in_preparation }}</h2>
+    <ul class="pub-list">
+      {%- for pub in pubs.in_preparation %}
+      {% include pub-item.html pub=pub kind="in_preparation" %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+</article>

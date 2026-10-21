@@ -1,0 +1,1782 @@
+/* ==========================================================================
+   Sina Hosseini: main stylesheet
+   Palette: blueprint 8.1 (exact values). Logical properties only (9.8).
+   Breakpoints (content width): 34em = 544px, 45em = 720px, 60em = 960px.
+   Every :hover style is inside @media (hover: hover).
+   ========================================================================== */
+
+/* ---------- 1. Design tokens ---------- */
+:root {
+  --bg: #FFFCF8;
+  --surface: #FFFFFF;
+  --border: #E7E2DA;
+  --text: #1F2A2E;
+  --text-muted: #4B5A5E;
+  --brand: #0F9D8A;
+  --brand-text: #0B7A6B;
+  --btn-bg: #0B7A6B;
+  --btn-fg: #FFFFFF;
+  --accent: #FF6B4A;
+  --accent-text: #B93D22;
+  --brand-tint: rgba(15,157,138,0.10);
+  --accent-tint: rgba(255,107,74,0.12);
+  /* Status-pill text: the same dark colour in both themes (B12). */
+  --pill-text: #1F2A2E;
+  color-scheme: light;
+
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-head: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Exact pixel sizes at the 17px base, still scaling with the browser's text size setting. */
+  --fs-sm: calc(15rem / 17);   /* 15px */
+  --fs-xs: calc(14rem / 17);   /* 14px */
+  --fs-16: calc(16rem / 17);   /* 16px */
+
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 40px;
+  --s6: 48px;
+  --s8: 64px;
+  --s10: 80px;
+
+  --gutter: 16px;
+  --header-h: 64px;
+  --text-max: 720px;
+  --grid-max: 1080px;
+  --radius: 12px;
+  --img-reserve: 48px;
+  /* Space kept above an anchored heading or a focused element: header height plus a small gap. */
+  --scroll-offset: calc(var(--header-h) + var(--s2));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1A1C;
+    --surface: #162427;
+    --border: #26383C;
+    --text: #E6EEF0;
+    --text-muted: #9FB3B8;
+    --brand: #2DD4BF;
+    --brand-text: #2DD4BF;
+    --btn-bg: #2DD4BF;
+    --btn-fg: #0F1A1C;
+    --accent: #FF8A70;
+    --accent-text: #FF8A70;
+    --brand-tint: rgba(45,212,191,0.12);
+    --accent-tint: rgba(255,138,112,0.14);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0F1A1C;
+  --surface: #162427;
+  --border: #26383C;
+  --text: #E6EEF0;
+  --text-muted: #9FB3B8;
+  --brand: #2DD4BF;
+  --brand-text: #2DD4BF;
+  --btn-bg: #2DD4BF;
+  --btn-fg: #0F1A1C;
+  --accent: #FF8A70;
+  --accent-text: #FF8A70;
+  --brand-tint: rgba(45,212,191,0.12);
+  --accent-tint: rgba(255,138,112,0.14);
+  color-scheme: dark;
+}
+
+@media (min-width: 34em) {
+  :root { --gutter: 24px; }
+}
+@media (min-width: 60em) {
+  :root { --gutter: 32px; }
+}
+
+/* ---------- 2. Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 106.25%; /* 17px when the browser default is 16px */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Without JS the header is not sticky, so only the small gap is needed. */
+html:not(.js) {
+  --scroll-offset: var(--s2);
+}
+
+/* Keyboard focus moving up the page stops below the sticky header (R5).
+   Only while something has keyboard focus, so anchored headings are not pushed down twice. */
+html.js:has(:focus-visible) {
+  scroll-padding-top: var(--scroll-offset);
+}
+
+/* Browsers without :has() (Firefox < 121, Safari < 15.4): keep keyboard focus visible first.
+   There, anchored headings land a little lower, and a tapped header button keeps a short-screen
+   header in view until focus leaves it. */
+@supports not selector(:has(*)) {
+  html.js {
+    scroll-padding-top: var(--scroll-offset);
+  }
+
+  @media (max-height: 500px) {
+    .js .site-header:focus-within {
+      inset-block-start: 0;
+    }
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+  min-block-size: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+h3,
+h4 {
+  font-weight: 600;
+}
+
+/* Anchored headings, and anything that receives keyboard focus, land below the sticky header (R5). */
+h1[id],
+h2[id],
+h3[id],
+h4[id],
+a,
+button,
+summary,
+[tabindex] {
+  scroll-margin-top: var(--scroll-offset);
+}
+
+p {
+  margin-block: 0 1em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--brand-text);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+strong {
+  font-weight: 600;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.95em; /* 16.15px inside 17px text: running text stays at 16px or more (R2) */
+  background: var(--brand-tint);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+hr {
+  border: 0;
+  border-block-start: 1px solid var(--border);
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  inline-size: 1px !important;
+  block-size: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--s1);
+  inset-block-start: var(--s1);
+  z-index: 100;
+  padding: 10px var(--s2);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* ---------- 3. Layout ---------- */
+.site-main {
+  flex: 1 0 auto;
+  padding-block-end: var(--s6);
+}
+
+.wrap {
+  max-width: calc(var(--grid-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.measure {
+  max-width: var(--text-max);
+  margin-inline: auto;
+}
+
+.page-projects .measure {
+  margin-inline: 0;
+}
+
+/* ---------- 4. Header and menu ---------- */
+.site-header {
+  position: relative;
+  z-index: 50;
+  background: var(--bg);
+  border-block-end: 1px solid var(--border);
+}
+
+.js .site-header {
+  position: sticky;
+  inset-block-start: 0;
+  /* Rotation: Chrome keeps the reading position by hit-testing the top centre of the screen and
+     keeping that element in place. If it hits the sticky header, the page content is not kept.
+     So only the header's top 1px row is left out of hit testing; the ::after layer below catches
+     clicks on the rest of the header background (and border), and the bar stays fully clickable. */
+  padding-block-start: 1px;
+  pointer-events: none;
+}
+
+.js .site-header::after {
+  content: "";
+  position: absolute;
+  inset: 1px 0 -1px;
+  z-index: -1;
+  pointer-events: auto;
+}
+
+.js .header-inner {
+  pointer-events: auto;
+  min-block-size: calc(var(--header-h) - 1px);
+}
+
+.header-inner {
+  max-width: calc(var(--grid-max) + 2 * var(--gutter));
+  min-block-size: var(--header-h);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--s2);
+}
+
+.site-name {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  min-inline-size: 0;
+  margin-inline-end: auto;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.12rem;
+  line-height: 1.2;
+  color: var(--text);
+  text-decoration: none;
+  /* One line normally; with very large browser text it may wrap instead of pushing the buttons off-screen. */
+  overflow-wrap: anywhere;
+}
+
+.header-controls {
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.site-nav {
+  order: 1;
+}
+
+.site-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 2px;
+}
+
+.site-menu a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: 10px;
+  color: var(--text);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.site-menu a[aria-current="page"] {
+  color: var(--brand-text);
+  font-weight: 600;
+}
+
+.site-menu a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 10px;
+  inset-block-end: 5px;
+  block-size: 3px;
+  border-radius: 2px;
+  background: var(--brand);
+}
+
+.nav-toggle,
+.theme-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.js .theme-toggle {
+  display: inline-flex;
+}
+
+.nav-toggle .icon-close {
+  display: none;
+}
+
+.site-header.is-open .nav-toggle .icon-menu {
+  display: none;
+}
+
+.site-header.is-open .nav-toggle .icon-close {
+  display: block;
+}
+
+/* Show the moon in light mode (switch to dark) and the sun in dark mode. */
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
+}
+
+.icon {
+  display: block;
+  flex: none;
+}
+
+/* Narrow screens: the hamburger opens a panel. Without JS the menu stays a wrapped row (B10). */
+@media (max-width: 44.99em) {
+  .site-nav {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .js .nav-toggle {
+    display: inline-flex;
+  }
+
+  .js .site-nav {
+    display: none;
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
+    /* 100% = the header's real height (it grows with larger text). */
+    max-block-size: calc(100vh - var(--header-h));
+    max-block-size: calc(100svh - 100%);
+    overflow-y: auto;
+    background: var(--bg);
+    border-block-end: 1px solid var(--border);
+    box-shadow: 0 12px 24px -16px rgba(0, 0, 0, 0.25);
+  }
+
+  .js .site-header.is-open .site-nav {
+    display: block;
+  }
+
+  .js .site-menu {
+    flex-direction: column;
+    padding: var(--s1) var(--gutter) var(--s2);
+  }
+
+  .js .site-menu a {
+    padding-inline: var(--s1);
+  }
+
+  .js .site-menu a[aria-current="page"]::after {
+    inset-inline: auto;
+    inset-inline-start: 0;
+    inset-block: 10px;
+    inline-size: 3px;
+    block-size: auto;
+  }
+
+  .js .site-menu a[aria-current="page"] {
+    padding-inline-start: var(--s2);
+  }
+}
+
+/* Short screens (landscape phones): the header scrolls away instead of covering the page (R4).
+   It stays position: sticky, with an offset of minus two screen heights, so it never sticks in view
+   whatever its height (larger text makes it taller). position: relative instead made mobile Chrome
+   jump to the top of the page on rotation. */
+@media (max-height: 500px) {
+  .js .site-header {
+    inset-block-start: -200vh;
+  }
+
+  /* It comes back into view while the menu is open, and for keyboard focus (not after a tap or click).
+     Separate rules: a browser without :has() must still apply the menu rule. */
+  .js .site-header.is-open {
+    inset-block-start: 0;
+  }
+
+  .js .site-header:has(:focus-visible) {
+    inset-block-start: 0;
+  }
+
+  :root {
+    --scroll-offset: var(--s2);
+  }
+}
+
+/* With JS the header is one row: name on one side, toggle and hamburger on the other. */
+.js .header-inner {
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 44.99em) {
+  .js .site-nav {
+    flex-basis: auto;
+  }
+}
+
+/* Very narrow screens (below 300px, e.g. large zoom): keep the header on one row. */
+@media (max-width: 18.75em) {
+  :root {
+    --gutter: 12px;
+  }
+
+  .site-name {
+    font-size: 1rem;
+  }
+
+  .header-inner {
+    column-gap: var(--s1);
+  }
+}
+
+/* ---------- 5. Buttons, links, tags ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  padding: 9px 22px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.btn-primary {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--brand-text);
+  border-color: var(--brand);
+}
+
+.btn-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 32px;
+  min-inline-size: 44px;
+  padding: 3px 14px;
+  border: 1px solid var(--brand);
+  border-radius: 999px;
+  color: var(--brand-text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+@media (pointer: coarse) {
+  .btn-sm {
+    min-block-size: 44px;
+  }
+}
+
+.link-line a,
+.pager-all a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  font-weight: 600;
+}
+
+.glance-list dd a,
+.related-list a {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+.tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand-text);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.tags li::before {
+  content: "";
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.badge,
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.badge {
+  background: var(--accent-tint);
+  color: var(--accent-text);
+}
+
+.pill {
+  background: var(--accent);
+  color: var(--pill-text);
+}
+
+/* Section headings carry a short coral underline mark. */
+.section-title,
+.prose h2 {
+  position: relative;
+  padding-block-end: 10px;
+}
+
+.section-title::after,
+.prose h2::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-end: 0;
+  inline-size: 40px;
+  block-size: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.section-title {
+  font-size: 1.45rem;
+  margin-block: 0 var(--s3);
+}
+
+/* ---------- 6. Icon links ---------- */
+.icon-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 10px;
+  color: var(--text-muted);
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.brand-icon {
+  display: block;
+  inline-size: 22px;
+  block-size: 22px;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / contain;
+  mask: no-repeat center / contain;
+}
+
+/* Brand logos supplied by Sina in assets/img/icons/ (B13). Paths are relative to this file. */
+.brand-icon--github {
+  -webkit-mask-image: url("../img/icons/github.svg");
+  mask-image: url("../img/icons/github.svg");
+}
+
+.brand-icon--linkedin {
+  -webkit-mask-image: url("../img/icons/linkedin.svg");
+  mask-image: url("../img/icons/linkedin.svg");
+}
+
+.brand-icon--orcid {
+  -webkit-mask-image: url("../img/icons/orcid.svg");
+  mask-image: url("../img/icons/orcid.svg");
+}
+
+.brand-icon--google-scholar {
+  -webkit-mask-image: url("../img/icons/google-scholar.svg");
+  mask-image: url("../img/icons/google-scholar.svg");
+}
+
+/* ---------- 7. Home ---------- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-block: var(--s5) var(--s1);
+}
+
+.hero-photo {
+  display: block;
+  inline-size: 120px;
+  block-size: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--brand);
+}
+
+/* 160px on tablets and computers; phones (also in landscape, height 500px or less) keep 120px (R7). */
+@media (min-width: 45em) and (min-height: 501px) {
+  .hero-photo {
+    inline-size: 160px;
+    block-size: 160px;
+  }
+}
+
+.hero-name {
+  margin: var(--s3) 0 var(--s1);
+  font-size: clamp(2rem, 1.7rem + 1.6vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.hero-tagline {
+  max-inline-size: 34ch;
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.5;
+}
+
+.hero-city {
+  margin: var(--s1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-16);
+}
+
+.hero-icons {
+  justify-content: center;
+  margin-block-start: var(--s2);
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-block-start: var(--s2);
+}
+
+.home-section {
+  margin-block-start: var(--s8);
+}
+
+.about {
+  margin-block-start: var(--s5);
+}
+
+.more-link {
+  margin-block: var(--s2) 0;
+}
+
+.card-row,
+.card-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s3);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* One-column rows stay in the text column; three-column rows use the grid width. */
+.card-row {
+  max-width: var(--text-max);
+  margin-inline: auto;
+}
+
+.card-row > li,
+.card-grid > li {
+  display: flex;
+  min-inline-size: 0;
+}
+
+.card-row > li > .card,
+.card-grid > li > .card {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* Home rows of three: 1 column or 3, never 2 (B16). Projects grid: 1, 2 or 3 (R3). */
+@media (min-width: 34em) {
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 60em) {
+  .card-row,
+  .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .card-row {
+    max-width: var(--grid-max);
+  }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+/* Theme cards */
+.theme-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--s2);
+  padding: 20px;
+  background: var(--brand-tint);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.theme-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--brand);
+}
+
+.theme-text {
+  min-inline-size: 0;
+}
+
+.theme-name {
+  margin: 0 0 6px;
+  font-size: 1.06rem;
+  line-height: 1.3;
+}
+
+.theme-short {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-16);
+  line-height: 1.55;
+}
+
+@media (min-width: 60em) {
+  .theme-card {
+    flex-direction: column;
+  }
+}
+
+/* Project cards */
+.project-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-cover {
+  display: block;
+  inline-size: 100%;
+  inline-size: min(100%, calc((100vh - var(--header-h) - var(--img-reserve)) * 16 / 9));
+  inline-size: min(100%, calc((100svh - var(--header-h) - var(--img-reserve)) * 16 / 9));
+  block-size: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin-inline: auto;
+  background: var(--brand-tint);
+  border-block-end: 1px solid var(--border);
+}
+
+.card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  padding: var(--s2) 20px 20px;
+  min-inline-size: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.card-title a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.stretched::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--radius);
+}
+
+.stretched:focus-visible {
+  outline: none;
+}
+
+.stretched:focus-visible::after {
+  outline: 3px solid var(--brand);
+  outline-offset: -3px;
+}
+
+.card-meta {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+}
+
+.card-summary {
+  margin: 0;
+  font-size: var(--fs-16);
+  line-height: 1.55;
+}
+
+.card-body .tags {
+  margin-block-start: auto;
+  padding-block-start: 4px;
+}
+
+/* One-column home rows on mid-size screens: cover beside the text. */
+@media (min-width: 34em) and (max-width: 59.99em) {
+  .card-row .project-card {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .card-row .card-cover {
+    inline-size: 40%;
+    inline-size: min(40%, calc((100vh - var(--header-h) - var(--img-reserve)) * 16 / 9));
+    inline-size: min(40%, calc((100svh - var(--header-h) - var(--img-reserve)) * 16 / 9));
+    flex: none;
+    margin: var(--s2);
+    margin-inline-end: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+}
+
+/* Education rows */
+.edu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.edu-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s2);
+  padding-block: 14px;
+  border-block-end: 1px solid var(--border);
+}
+
+.edu-row:first-child {
+  border-block-start: 1px solid var(--border);
+}
+
+.edu-main {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.edu-title {
+  font-weight: 600;
+}
+
+.edu-org {
+  color: var(--text-muted);
+  font-size: var(--fs-16);
+}
+
+.edu-year {
+  flex: none;
+  font-weight: 600;
+  color: var(--brand-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Beyond Research */
+.beyond-photos {
+  display: grid;
+  gap: var(--s3);
+  margin-block-start: var(--s3);
+}
+
+.beyond-photos .fig {
+  margin: 0;
+}
+
+@media (min-width: 34em) {
+  .beyond-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Projects index groups */
+.project-group {
+  margin-block-start: var(--s6);
+}
+
+.project-group > .section-title {
+  max-width: var(--text-max);
+}
+
+/* ---------- 8. Pages and prose ---------- */
+.page-head {
+  padding-block: var(--s5) var(--s1);
+}
+
+.page-head h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.lead {
+  margin: 12px 0 0;
+  color: var(--text-muted);
+  font-size: 1.12rem;
+  line-height: 1.55;
+}
+
+.intro {
+  margin-block-start: var(--s2);
+}
+
+.prose > * {
+  margin-block: 0;
+}
+
+.prose > * + * {
+  margin-block-start: 1em;
+}
+
+.prose h2 {
+  font-size: 1.45rem;
+  margin-block-start: 2em;
+}
+
+.prose h3 {
+  font-size: 1.15rem;
+  margin-block-start: 1.6em;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-block-start: 0.75em;
+}
+
+.prose ul,
+.prose ol {
+  padding-inline-start: 1.3em;
+}
+
+.prose li + li {
+  margin-block-start: 0.4em;
+}
+
+.prose li > p {
+  margin: 0;
+}
+
+.prose hr {
+  margin-block-start: 2.25em;
+}
+
+.prose hr + * {
+  margin-block-start: 1.5em;
+}
+
+.prose > .fig {
+  margin-block-start: 1.75em;
+}
+
+/* Research: Methods & Tools in two columns, keyed to the kramdown ids (A8). */
+@media (min-width: 45em) {
+  .page-research .prose {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s4);
+    grid-auto-flow: row dense;
+  }
+
+  .page-research .prose > * {
+    grid-column: 1 / -1;
+    min-inline-size: 0;
+  }
+
+  .page-research .prose > #computational,
+  .page-research .prose > #computational + ul {
+    grid-column: 1;
+  }
+
+  .page-research .prose > #experimental,
+  .page-research .prose > #experimental + ul {
+    grid-column: 2;
+  }
+
+  .page-research .prose > #experimental {
+    margin-block-start: 0.75em;
+  }
+}
+
+/* ---------- 9. Figures ---------- */
+.fig {
+  margin: 0;
+}
+
+.fig-img {
+  display: block;
+  margin-inline: auto;
+  max-width: 100%;
+  block-size: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px var(--border);
+  /* Never wider than the column, the file, or what fits under the header. */
+  inline-size: min(100%, calc(var(--w) * 1px), calc((100vh - var(--header-h) - var(--img-reserve)) * var(--w) / var(--h)));
+  inline-size: min(100%, calc(var(--w) * 1px), calc((100svh - var(--header-h) - var(--img-reserve)) * var(--w) / var(--h)));
+}
+
+/* src_dark (D64, D69): one image per theme; the inactive one is display:none. */
+.fig-dark {
+  display: none;
+}
+
+:root[data-theme="dark"] .fig-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .fig-dark {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .fig-light {
+    display: none;
+  }
+
+  :root:not([data-theme]) .fig-dark {
+    display: block;
+  }
+}
+
+.fig figcaption {
+  margin-block-start: 10px;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ---------- 10. Project page ---------- */
+.glance {
+  margin-block: var(--s3) var(--s1);
+  padding: 20px var(--s3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.glance-title {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.glance-list {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.glance-list > div {
+  display: grid;
+  gap: 2px;
+}
+
+.glance-list dt {
+  color: var(--text-muted);
+  font-size: var(--fs-16);
+  font-weight: 600;
+}
+
+.glance-list dd {
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.glance-list .tags {
+  padding-block-start: 3px;
+}
+
+.glance-outputs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 34em) {
+  .glance-list > div {
+    grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr);
+    gap: var(--s2);
+  }
+}
+
+.project-body {
+  margin-block-start: var(--s5);
+}
+
+.related {
+  margin-block-start: var(--s6);
+}
+
+.related h2 {
+  font-size: 1.45rem;
+  margin: 0 0 12px;
+}
+
+.related-list {
+  margin: 0;
+  padding-inline-start: 1.3em;
+}
+
+.related-list li + li {
+  margin-block-start: 0.4em;
+}
+
+.pager {
+  display: grid;
+  gap: 12px;
+  margin-block-start: var(--s6);
+  padding-block-start: var(--s3);
+  border-block-start: 1px solid var(--border);
+}
+
+.pager:empty {
+  display: none;
+}
+
+.pager-link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-block-size: 44px;
+  padding: 12px var(--s2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.pager-label {
+  color: var(--brand-text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.pager-title {
+  color: var(--text);
+  font-family: var(--font-head);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+@media (min-width: 34em) {
+  .pager {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pager-prev {
+    grid-column: 1;
+  }
+
+  .pager-next {
+    grid-column: 2;
+    text-align: end;
+  }
+}
+
+.pager-all {
+  margin: var(--s2) auto 0;
+  text-align: center;
+}
+
+/* ---------- 11. Publications ---------- */
+.pub-section {
+  margin-block-start: var(--s6);
+}
+
+.pub-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pub {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s2);
+  padding-block: 20px;
+  border-block-end: 1px solid var(--border);
+}
+
+.pub:first-child {
+  padding-block-start: 4px;
+}
+
+.pub:last-child {
+  border-block-end: 0;
+}
+
+.pub-thumb {
+  display: block;
+  flex: none;
+  inline-size: 72px;
+  border-radius: 4px;
+}
+
+.pub-thumb img {
+  display: block;
+  inline-size: 72px;
+  block-size: auto;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--border);
+  background: var(--surface);
+}
+
+@media (min-width: 34em) {
+  .pub-thumb,
+  .pub-thumb img {
+    inline-size: 96px;
+  }
+}
+
+.pub-body {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.pub-body p {
+  margin: 0;
+}
+
+.pub-authors {
+  color: var(--text-muted);
+  font-size: var(--fs-16);
+}
+
+.pub-authors strong {
+  color: var(--text);
+}
+
+.pub-title {
+  margin-block: 2px !important;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.pub-venue {
+  color: var(--text-muted);
+  font-size: var(--fs-16);
+}
+
+.pub-flags {
+  margin-block-start: var(--s1) !important;
+}
+
+.pub-buttons {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+
+/* ---------- 12. CV ---------- */
+.cv-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+
+.cv-download {
+  margin: 0;
+}
+
+.cv-section {
+  margin-block-start: var(--s6);
+}
+
+.cv-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cv-entry {
+  padding-block: var(--s2);
+  border-block-end: 1px solid var(--border);
+}
+
+.cv-entry:first-child {
+  padding-block-start: 0;
+}
+
+.cv-entry:last-child {
+  border-block-end: 0;
+}
+
+.cv-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2px var(--s2);
+}
+
+.cv-title {
+  margin: 0;
+  font-size: 1.06rem;
+  line-height: 1.35;
+}
+
+.cv-dates {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Each date stays on one line; the range may wrap between them with very large text. */
+.cv-dates > span:not(.sep) {
+  white-space: nowrap;
+}
+
+.cv-org {
+  margin: 2px 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-16);
+}
+
+.cv-facts {
+  margin: 10px 0 0;
+  display: grid;
+  gap: 4px;
+}
+
+.cv-facts > div {
+  display: grid;
+  gap: 0;
+}
+
+.cv-facts dt {
+  font-weight: 600;
+}
+
+.cv-facts dd {
+  margin: 0;
+}
+
+@media (min-width: 34em) {
+  .cv-facts > div {
+    grid-template-columns: minmax(0, 6.5em) minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+.cv-bullets {
+  list-style: disc;
+  margin: 10px 0 0;
+  padding-inline-start: 1.3em;
+}
+
+.cv-bullets li + li {
+  margin-block-start: 4px;
+}
+
+.skills {
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.skill-group {
+  display: grid;
+  gap: 2px;
+}
+
+.skill-group dt {
+  font-weight: 600;
+}
+
+.skill-group dd {
+  margin: 0;
+}
+
+@media (min-width: 34em) {
+  .skill-group {
+    grid-template-columns: minmax(0, 10em) minmax(0, 1fr);
+    gap: var(--s2);
+  }
+}
+
+.skill-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.skill-items li:not(:last-child)::after {
+  content: "\00B7";
+  margin-inline: 0.5em;
+  color: var(--text-muted);
+}
+
+/* ---------- 13. 404 ---------- */
+.layout-default .site-main .wrap {
+  padding-block: 12vh var(--s5);
+  text-align: center;
+}
+
+.layout-default .site-main h1,
+.layout-default .site-main p {
+  max-width: var(--text-max);
+  margin-inline: auto;
+}
+
+.layout-default .site-main h1 {
+  margin-block: 0 var(--s2);
+  font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.2rem);
+}
+
+.layout-default .site-main p a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  font-weight: 600;
+}
+
+/* ---------- 14. Footer ---------- */
+.site-footer {
+  flex: none;
+  margin-block-start: var(--s6);
+  border-block-start: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.footer-inner {
+  max-width: calc(var(--grid-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding: var(--s3) var(--gutter) var(--s4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s1) var(--s3);
+}
+
+.footer-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.footer-meta p {
+  margin: 0;
+}
+
+/* ---------- 14b. Very large text ---------- */
+/* Short labels and titles may break inside a long word rather than cause sideways scrolling
+   when the browser's text size is set very large. Normal sizes are not affected. */
+.hero > * {
+  max-inline-size: 100%;
+}
+
+.hero-name,
+.badge,
+.pill,
+.tags li,
+.pager-title,
+.related-list a,
+.glance-list dt,
+.glance-list dd,
+.cv-facts dt,
+.cv-facts dd,
+.skill-group dt,
+.skill-items li,
+.link-line a,
+.pager-all a,
+.card-title,
+.edu-title,
+.cv-title {
+  overflow-wrap: anywhere;
+}
+
+.badge,
+.pill {
+  max-inline-size: 100%;
+}
+
+/* ---------- 15. Hover (pointer devices only, R10) ---------- */
+@media (hover: hover) {
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .site-menu a:hover {
+    background: var(--brand-tint);
+  }
+
+  .nav-toggle:hover,
+  .theme-toggle:hover,
+  .icon-link:hover {
+    background: var(--brand-tint);
+    color: var(--brand-text);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 3px 0 0 var(--accent);
+  }
+
+  .btn-secondary:hover,
+  .btn-sm:hover {
+    background: var(--brand-tint);
+  }
+
+  .card:hover,
+  .pager-link:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .card-title a:hover {
+    text-decoration: none;
+  }
+}
+
+/* ---------- 16. Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .card:hover,
+  .pager-link:hover {
+    transform: none;
+  }
+}
+
+/* ---------- 17. Print (blueprint 9.9) ---------- */
+@media print {
+  :root,
+  :root[data-theme="dark"],
+  :root:not([data-theme="light"]) {
+    --bg: #FFFFFF;
+    --surface: #FFFFFF;
+    --border: #BBBBBB;
+    --text: #000000;
+    --text-muted: #000000;
+    --brand-text: #000000;
+    --brand-tint: transparent;
+    --accent-tint: transparent;
+    color-scheme: light;
+  }
+
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .theme-toggle,
+  .nav-toggle,
+  .no-print,
+  .pager,
+  .pager-all {
+    display: none !important;
+  }
+
+  body {
+    background: #FFFFFF;
+    color: #000000;
+    font-size: 11pt;
+    display: block;
+  }
+
+  a {
+    color: #000000;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  .site-main {
+    padding: 0;
+  }
+
+  .page-head {
+    padding-block-start: 0;
+  }
+
+  .cv-entry,
+  .card,
+  .glance,
+  .fig {
+    break-inside: avoid;
+  }
+
+  .section-title::after,
+  .prose h2::after {
+    background: #000000;
+  }
+}

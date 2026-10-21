@@ -1,0 +1,87 @@
+---
+layout: default
+---
+{%- assign ui = site.data.ui -%}
+{%- assign p = site.data.profile -%}
+{%- assign hero_src = p.photo | replace: ".webp", "-320.webp" -%}
+<div class="home">
+  <section class="hero">
+    <img class="hero-photo" src="{{ hero_src | relative_url }}" alt="{{ ui.alt.profile_photo | escape }}"{% include img-attrs.html src=hero_src %} fetchpriority="high" decoding="async">
+    <h1 class="hero-name">{{ p.name }}</h1>
+    <p class="hero-tagline">{{ p.tagline }}</p>
+    <p class="hero-city">{{ p.city }}</p>
+    {% include social-links.html email=true class="hero-icons" %}
+    <div class="hero-buttons">
+      <a class="btn btn-primary" href="{{ site.data.profile.cv_pdf | relative_url }}" download="Sina_Hosseini_CV.pdf">{{ site.data.ui.hero.download_cv }}</a>
+      <a class="btn btn-secondary" href="mailto:{{ p.email }}">{{ ui.hero.email_me }}</a>
+    </div>
+  </section>
+
+  <section class="home-section about measure" aria-labelledby="about-heading">
+    <h2 id="about-heading" class="visually-hidden">{{ ui.home.about }}</h2>
+    <div class="prose">
+{{ content }}
+    </div>
+  </section>
+
+  <section class="home-section" aria-labelledby="interests-heading">
+    <h2 id="interests-heading" class="section-title measure">{{ ui.home.research_interests }}</h2>
+    <ul class="card-row theme-cards">
+      {%- for t in site.data.themes %}
+      <li>
+        <a class="card theme-card" href="{{ '/research/' | relative_url }}#{{ t.anchor }}">
+          <span class="theme-icon">{% include icon.html name=t.icon %}</span>
+          <div class="theme-text">
+            <h3 class="theme-name">{{ t.name }}</h3>
+            <p class="theme-short">{{ t.short }}</p>
+          </div>
+        </a>
+      </li>
+      {%- endfor %}
+    </ul>
+    <p class="more-link link-line measure"><a href="{{ '/research/' | relative_url }}">{{ ui.home.more_research }}</a></p>
+  </section>
+
+  <section class="home-section" aria-labelledby="projects-heading">
+    <h2 id="projects-heading" class="section-title measure">{{ ui.home.selected_projects }}</h2>
+    {%- include project-order.html -%}
+    {%- assign featured = ordered_projects | where: "featured", true %}
+    <ul class="card-row featured-cards">
+      {%- for proj in featured %}
+      <li>{% include project-card.html p=proj %}</li>
+      {%- endfor %}
+    </ul>
+    <p class="more-link link-line measure"><a href="{{ '/projects/' | relative_url }}">{{ ui.home.all_projects }}</a></p>
+  </section>
+
+  <section class="home-section measure" aria-labelledby="education-heading">
+    <h2 id="education-heading" class="section-title">{{ ui.home.education }}</h2>
+    <ul class="edu-list">
+      {%- for e in site.data.education %}
+      <li class="edu-row">
+        <span class="edu-main">
+          <span class="edu-title">{{ e.title }}</span>
+          {%- if e.org and e.org != "" %}
+          <span class="edu-org">{{ e.org }}</span>
+          {%- endif %}
+        </span>
+        <span class="edu-year">{{ e.end | slice: -4, 4 }}</span>
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+
+  <section class="home-section measure" aria-labelledby="beyond-heading">
+    <h2 id="beyond-heading" class="section-title">{{ ui.home.beyond_research }}</h2>
+    <div class="prose">
+      {{ page.beyond_research | markdownify }}
+    </div>
+    {%- if page.beyond_photos and page.beyond_photos.size > 0 %}
+    <div class="beyond-photos">
+      {%- for ph in page.beyond_photos %}
+      {% include figure.html src=ph.src alt=ph.alt caption=ph.caption %}
+      {%- endfor %}
+    </div>
+    {%- endif %}
+  </section>
+</div>

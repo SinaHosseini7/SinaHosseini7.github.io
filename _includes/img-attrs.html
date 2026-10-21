@@ -1,0 +1,3 @@
+{%- comment -%}width/height from _data/images.yml (D68). Omitted, not failing, when there is no entry.{%- endcomment -%}
+{%- assign dim = site.data.images[include.src] -%}
+{%- if dim %} width="{{ dim.w }}" height="{{ dim.h }}"{% endif -%}

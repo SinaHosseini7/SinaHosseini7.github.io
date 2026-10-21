@@ -1,0 +1,12 @@
+---
+layout: default
+---
+{%- assign slug = page.url | remove: "/" | remove: ".html" -%}
+<article class="page page-{{ slug | default: 'home' }}">
+  <header class="page-head measure">
+    <h1>{{ page.title }}</h1>
+  </header>
+  <div class="prose measure">
+{{ content }}
+  </div>
+</article>

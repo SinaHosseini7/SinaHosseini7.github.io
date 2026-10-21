@@ -1,0 +1,23 @@
+{%- comment -%}Project card. Param: p = a project document.{%- endcomment -%}
+{%- assign p = include.p -%}
+<article class="card project-card">
+  {%- if p.cover and p.cover != "" %}
+  <img class="card-cover" src="{{ p.cover | relative_url }}" alt="{{ p.cover_alt | escape }}"{% include img-attrs.html src=p.cover %} loading="lazy" decoding="async">
+  {%- endif %}
+  <div class="card-body">
+    <h3 class="card-title"><a class="stretched" href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
+    <p class="card-meta">
+      {%- if p.organization and p.organization != "" %}<span>{{ p.organization }}</span>{% endif -%}
+      {%- if p.organization and p.organization != "" and p.period and p.period != "" %}<span class="sep" aria-hidden="true"> · </span>{% endif -%}
+      {%- if p.period and p.period != "" %}<span>{{ p.period }}</span>{% endif -%}
+    </p>
+    <p class="card-summary">{{ p.summary }}</p>
+    {%- if p.tools and p.tools.size > 0 %}
+    <ul class="tags">
+      {%- for t in p.tools limit: 4 %}
+      <li>{{ t }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+  </div>
+</article>

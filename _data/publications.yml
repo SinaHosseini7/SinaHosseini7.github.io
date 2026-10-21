@@ -1,0 +1,50 @@
+journal:
+  - authors: "H. Bargozin, T. Yousefi Amiri, S. Hosseini"
+    title: "Reduce building energy loss with liquid thermal insulation containing nanoporous silica aerogels"
+    venue: "Journal of Energy Management and Technology, 7(1), 11–18"
+    year: 2023
+    pdf: /assets/files/papers/jemt-2023.pdf
+    doi: "10.22109/jemt.2022.317874.1354"
+    url: ""
+    project: ""
+    thumb: /assets/img/pubs/jemt-2023.webp
+  - authors: "M. Maleki Kakelar, S. Hosseini, A. Mohammadi"
+    title: "Feasibility of Using Carbonic Anhydrase in Bio Sequestration of Carbon Dioxide: Challenges and Opportunities"
+    venue: "Iranian Chemical Engineering Journal, 21(125), 7–21 (in Persian)"
+    year: 2022
+    pdf: /assets/files/papers/ijche-2022.pdf
+    doi: "10.22034/ijche.2022.317496.1159"
+    url: ""
+    project: co2-biosequestration-review
+    thumb: /assets/img/pubs/ijche-2022.webp
+conference:
+  - authors: "H. Bargozin, T. Yousefi Amiri, S. Hosseini"
+    title: "Reducing building energy loss with liquid thermal insulation containing nanoporous silica aerogel"
+    venue: "7th International Conference on Technology and Energy Management (in Persian; title translated)"
+    year: 2021
+    presentation: oral
+    pdf: ""
+    doi: ""
+    url: "https://civilica.com/doc/1277526/"
+    project: ""
+    thumb: /assets/img/pubs/ictem-2021.webp
+  - authors: "H. Bargozin, T. Yousefi Amiri, S. Hosseini"
+    title: "Simulation of online replacement of nanoporous aerogel thermal insulation on Asaluyeh LPG lines"
+    venue: "National Conference of Chemical Engineering and Nanotechnology (in Persian; title translated)"
+    year: 2020
+    presentation: oral
+    pdf: ""
+    doi: ""
+    url: "https://civilica.com/doc/1156091/"
+    project: lpg-line-aerogel-insulation
+    thumb: /assets/img/pubs/lpg-2020.webp
+in_preparation:
+  - authors: "S. Hosseini, R. Panahi"
+    title: "Reconciling global magnesite and magnesia statistics: reporting bases, discrepancies and implications for supply-risk assessment"
+    status: in preparation
+  - authors: "S. Hosseini, R. Panahi"
+    title: "What controls the rate of magnesite leaching? A critical review of process parameters, kinetics and selectivity"
+    status: in preparation
+  - authors: "S. Hosseini, R. Panahi"
+    title: "From low-grade magnesite to high-purity MgO: a critical review of calcium, iron and silica separation via dry, wet and hybrid routes"
+    status: in preparation

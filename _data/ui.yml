@@ -1,0 +1,81 @@
+skip_to_content: "Skip to content"
+nav:
+  - { label: "Home", url: "/" }
+  - { label: "Research", url: "/research/" }
+  - { label: "Projects", url: "/projects/" }
+  - { label: "Publications", url: "/publications/" }
+  - { label: "CV", url: "/cv/" }
+menu_open: "Open menu"
+menu_close: "Close menu"
+theme_toggle: "Switch between light and dark theme"
+hero:
+  download_cv: "Download CV"
+  email_me: "Email me"
+  icon_labels:
+    email: "Email"
+    github: "GitHub"
+    linkedin: "LinkedIn"
+    orcid: "ORCID"
+    scholar: "Google Scholar"
+home:
+  about: "About"
+  research_interests: "Research Interests"
+  more_research: "More on my research →"
+  selected_projects: "Selected Projects"
+  all_projects: "All projects →"
+  education: "Education"
+  beyond_research: "Beyond Research"
+projects:
+  groups:
+    industry: "Industry R&D"
+    academic: "Academic Research"
+    software: "Software"
+    personal: "Engineering & Personal"
+  at_a_glance: "At a glance"
+  role: "Role"
+  organization: "Organization"
+  period: "Period"
+  tools: "Tools"
+  outputs: "Outputs"
+  theme: "Research theme"
+  related: "Related"
+  previous: "← Previous project"
+  next: "Next project →"
+  all: "All projects"
+publications:
+  journal: "Journal Articles"
+  conference: "Conference Papers"
+  in_preparation: "Manuscripts in Preparation"
+  oral: "Oral presentation"
+  pdf: "PDF"
+  doi: "DOI"
+  link: "Link"
+  project: "Project"
+  status:
+    "in preparation": "In preparation"
+    "submitted": "Submitted"
+    "under review": "Under review"
+cv:
+  download_pdf: "Download PDF"
+  education: "Education"
+  research_industry: "Research & Industry Experience"
+  teaching: "Teaching Experience"
+  skills: "Skills"
+  awards: "Awards & Honors"
+  volunteering: "Volunteering"
+  publications: "Publications"
+  publications_link: "See the full list on the Publications page →"
+  gpa: "GPA"
+  thesis: "Thesis"
+  advisor: "Advisor"
+  present: "present"
+footer:
+  last_updated: "Last updated:"
+  copyright_name: "Sina Hosseini"
+not_found:
+  text: "This page doesn't exist or has moved."
+  home_link: "Try the home page."
+alt:
+  profile_photo: "Portrait of Sina Hosseini"
+  og_image: "Sina Hosseini, chemical engineer, with tagline"
+  pub_thumb_prefix: "First page of"

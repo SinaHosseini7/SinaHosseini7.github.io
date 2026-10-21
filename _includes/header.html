@@ -1,0 +1,27 @@
+{%- assign ui = site.data.ui -%}
+<header class="site-header">
+  <div class="header-inner">
+    <a class="site-name" href="{{ '/' | relative_url }}">{{ site.data.profile.name }}</a>
+    <div class="header-controls">
+      {% include theme-toggle.html %}
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="{{ ui.menu_open }}" data-label-open="{{ ui.menu_open }}" data-label-close="{{ ui.menu_close }}">
+        {% include icon.html name="menu" %}{% include icon.html name="close" %}
+      </button>
+    </div>
+    <nav class="site-nav">
+      <ul class="site-menu" id="site-menu">
+        {%- for item in ui.nav -%}
+          {%- assign current = false -%}
+          {%- if item.url == "/" -%}
+            {%- if page.url == "/" or page.url == "/index.html" -%}{%- assign current = true -%}{%- endif -%}
+          {%- else -%}
+            {%- assign len = item.url | size -%}
+            {%- assign head = page.url | slice: 0, len -%}
+            {%- if head == item.url -%}{%- assign current = true -%}{%- endif -%}
+          {%- endif %}
+        <li><a href="{{ item.url | relative_url }}"{% if current %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,18 @@
+{%- comment -%}
+Figure with caption (blueprint 9.4, D64, D69). Params: src, alt, caption, optional src_dark.
+With src_dark: two images, CSS shows one by [data-theme] (falls back to prefers-color-scheme), one figcaption.
+--w/--h let CSS keep the image inside the viewport height without changing its shape.
+{%- endcomment -%}
+{%- assign fdim = site.data.images[include.src] -%}
+<figure class="fig{% if include.src_dark %} fig-has-dark{% endif %}">
+{%- if include.src_dark -%}
+{%- assign ddim = site.data.images[include.src_dark] | default: fdim %}
+<img class="fig-img fig-light" src="{{ include.src | relative_url }}" alt="{{ include.alt | escape }}"{% if fdim %} width="{{ fdim.w }}" height="{{ fdim.h }}" style="--w:{{ fdim.w }};--h:{{ fdim.h }}"{% endif %} loading="lazy" decoding="async">
+<img class="fig-img fig-dark" src="{{ include.src_dark | relative_url }}" alt="{{ include.alt | escape }}"{% if ddim %} width="{{ ddim.w }}" height="{{ ddim.h }}" style="--w:{{ ddim.w }};--h:{{ ddim.h }}"{% endif %} loading="lazy" decoding="async">
+{%- else %}
+<img class="fig-img" src="{{ include.src | relative_url }}" alt="{{ include.alt | escape }}"{% if fdim %} width="{{ fdim.w }}" height="{{ fdim.h }}" style="--w:{{ fdim.w }};--h:{{ fdim.h }}"{% endif %} loading="lazy" decoding="async">
+{%- endif %}
+{%- if include.caption and include.caption != "" %}
+<figcaption>{{ include.caption | escape }}</figcaption>
+{%- endif %}
+</figure>

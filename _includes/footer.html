@@ -1,0 +1,14 @@
+{%- assign ui = site.data.ui -%}
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-contact">
+      {%- comment -%}Icon links only: Sina asked to keep his e-mail address out of the footer (21 Oct 2026).
+      The e-mail stays on Home (icon and "Email me" button).{%- endcomment %}
+      {% include social-links.html class="footer-icons" %}
+    </div>
+    <div class="footer-meta">
+      <p class="footer-updated"><span>{{ ui.footer.last_updated }}</span> <time datetime="{{ site.time | date: '%Y-%m' }}">{{ site.time | date: '%B %Y' }}</time></p>
+      <p class="footer-copy">&copy; <span>{{ site.time | date: '%Y' }}</span> <span>{{ ui.footer.copyright_name }}</span></p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,25 @@
+---
+layout: default
+---
+{%- assign ui = site.data.ui -%}
+<article class="page page-projects">
+  <header class="page-head measure">
+    <h1>{{ page.title }}</h1>
+  </header>
+  <div class="prose measure intro">
+{{ content }}
+  </div>
+  {%- for g in ui.projects.groups -%}
+    {%- assign group_items = site.projects | where: "group", g[0] | sort: "order" -%}
+    {%- if group_items.size > 0 %}
+  <section class="project-group" aria-labelledby="group-{{ g[0] }}">
+    <h2 id="group-{{ g[0] }}" class="section-title">{{ g[1] }}</h2>
+    <ul class="card-grid">
+      {%- for proj in group_items %}
+      <li>{% include project-card.html p=proj %}</li>
+      {%- endfor %}
+    </ul>
+  </section>
+    {%- endif -%}
+  {%- endfor %}
+</article>

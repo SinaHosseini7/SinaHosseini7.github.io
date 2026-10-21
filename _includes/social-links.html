@@ -1,0 +1,24 @@
+{%- comment -%}
+Icon links: email (optional), GitHub, LinkedIn, ORCID, and Google Scholar only when show_scholar is true.
+Params: email=true to include the email icon; class="extra classes".
+Each link is icon-only, so its accessible name comes from ui.hero.icon_labels.
+{%- endcomment -%}
+{%- assign p = site.data.profile -%}
+{%- assign labels = site.data.ui.hero.icon_labels -%}
+<ul class="icon-links {{ include.class }}">
+{%- if include.email and p.email and p.email != "" %}
+<li><a class="icon-link" href="mailto:{{ p.email }}" aria-label="{{ labels.email }}">{% include icon.html name="email" %}</a></li>
+{%- endif -%}
+{%- if p.links.github and p.links.github != "" %}
+<li><a class="icon-link" href="{{ p.links.github }}" rel="me" aria-label="{{ labels.github }}">{% include brand-icon.html name="github" %}</a></li>
+{%- endif -%}
+{%- if p.links.linkedin and p.links.linkedin != "" %}
+<li><a class="icon-link" href="{{ p.links.linkedin }}" rel="me" aria-label="{{ labels.linkedin }}">{% include brand-icon.html name="linkedin" %}</a></li>
+{%- endif -%}
+{%- if p.links.orcid and p.links.orcid != "" %}
+<li><a class="icon-link" href="{{ p.links.orcid }}" rel="me" aria-label="{{ labels.orcid }}">{% include brand-icon.html name="orcid" %}</a></li>
+{%- endif -%}
+{%- if p.show_scholar == true and p.links.scholar and p.links.scholar != "" %}
+<li><a class="icon-link" href="{{ p.links.scholar }}" rel="me" aria-label="{{ labels.scholar }}">{% include brand-icon.html name="google-scholar" %}</a></li>
+{%- endif %}
+</ul>

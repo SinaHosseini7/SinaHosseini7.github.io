@@ -1,0 +1,28 @@
+{%- comment -%}Person structured data (blueprint 9.5). Every value comes from data or _config.yml.{%- endcomment -%}
+{%- assign p = site.data.profile -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": {{ p.name | jsonify }},
+  "jobTitle": {{ site.job_title | jsonify }},
+  "email": {{ p.email | jsonify }},
+  "url": {{ "/" | absolute_url | jsonify }},
+  "image": {{ p.photo | absolute_url | jsonify }},
+  "sameAs": [
+    {%- assign same = "" | split: "" -%}
+    {%- if p.links.github and p.links.github != "" -%}{%- assign same = same | push: p.links.github -%}{%- endif -%}
+    {%- if p.links.linkedin and p.links.linkedin != "" -%}{%- assign same = same | push: p.links.linkedin -%}{%- endif -%}
+    {%- if p.links.orcid and p.links.orcid != "" -%}{%- assign same = same | push: p.links.orcid -%}{%- endif -%}
+    {%- if p.show_scholar == true and p.links.scholar and p.links.scholar != "" -%}{%- assign same = same | push: p.links.scholar -%}{%- endif -%}
+    {%- for s in same %}
+    {{ s | jsonify }}{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ],
+  "alumniOf": [
+    {%- for e in site.data.education %}
+    { "@type": "CollegeOrUniversity", "name": {{ e.org | jsonify }} }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}
+</script>

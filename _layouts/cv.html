@@ -1,0 +1,91 @@
+---
+layout: default
+---
+{%- assign cui = site.data.ui.cv -%}
+{%- assign exp = site.data.experience -%}
+<article class="page page-cv">
+  <header class="page-head measure cv-top">
+    <h1>{{ page.title }}</h1>
+    <p class="cv-download no-print"><a class="btn btn-primary" href="{{ site.data.profile.cv_pdf | relative_url }}" download="Sina_Hosseini_CV.pdf">{{ site.data.ui.cv.download_pdf }}</a></p>
+  </header>
+  {%- assign body_text = content | strip -%}
+  {%- if body_text != "" %}
+  <div class="prose measure intro">
+{{ content }}
+  </div>
+  {%- endif -%}
+
+  {%- if site.data.education and site.data.education.size > 0 %}
+  <section class="cv-section measure" aria-labelledby="cv-education">
+    <h2 id="cv-education" class="section-title">{{ cui.education }}</h2>
+    <ul class="cv-list">
+      {%- for e in site.data.education %}
+      {% include cv-entry.html e=e edu=true %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif -%}
+
+  {%- if exp.research_industry and exp.research_industry.size > 0 %}
+  <section class="cv-section measure" aria-labelledby="cv-research-industry">
+    <h2 id="cv-research-industry" class="section-title">{{ cui.research_industry }}</h2>
+    <ul class="cv-list">
+      {%- for e in exp.research_industry %}
+      {% include cv-entry.html e=e %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif -%}
+
+  {%- if exp.teaching and exp.teaching.size > 0 %}
+  <section class="cv-section measure" aria-labelledby="cv-teaching">
+    <h2 id="cv-teaching" class="section-title">{{ cui.teaching }}</h2>
+    <ul class="cv-list">
+      {%- for e in exp.teaching %}
+      {% include cv-entry.html e=e %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif -%}
+
+  {%- if site.data.skills and site.data.skills.size > 0 %}
+  <section class="cv-section measure" aria-labelledby="cv-skills">
+    <h2 id="cv-skills" class="section-title">{{ cui.skills }}</h2>
+    <dl class="skills">
+      {%- for s in site.data.skills %}
+      <div class="skill-group">
+        <dt>{{ s.title }}</dt>
+        <dd><ul class="skill-items">{% for b in s.bullets %}<li>{{ b }}</li>{% endfor %}</ul></dd>
+      </div>
+      {%- endfor %}
+    </dl>
+  </section>
+  {%- endif -%}
+
+  {%- if site.data.awards and site.data.awards.size > 0 %}
+  <section class="cv-section measure" aria-labelledby="cv-awards">
+    <h2 id="cv-awards" class="section-title">{{ cui.awards }}</h2>
+    <ul class="cv-list">
+      {%- for e in site.data.awards %}
+      {% include cv-entry.html e=e %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif -%}
+
+  {%- if site.data.volunteering and site.data.volunteering.size > 0 %}
+  <section class="cv-section measure" aria-labelledby="cv-volunteering">
+    <h2 id="cv-volunteering" class="section-title">{{ cui.volunteering }}</h2>
+    <ul class="cv-list">
+      {%- for e in site.data.volunteering %}
+      {% include cv-entry.html e=e %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  <section class="cv-section measure" aria-labelledby="cv-publications">
+    <h2 id="cv-publications" class="section-title">{{ cui.publications }}</h2>
+    <p class="link-line"><a href="{{ '/publications/' | relative_url }}">{{ cui.publications_link }}</a></p>
+  </section>
+</article>

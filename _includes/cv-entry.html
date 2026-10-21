@@ -1,0 +1,43 @@
+{%- comment -%}
+One CV entry (education, experience, awards, volunteering). Params: e, edu=true for GPA/thesis/advisor.
+Dates: "start – end"; empty start shows only end; empty end shows ui.cv.present. Empty org is omitted (D69).
+Bullets may contain Markdown links: markdownify, then remove the wrapping <p> (D69).
+{%- endcomment -%}
+{%- assign e = include.e -%}
+{%- assign cui = site.data.ui.cv -%}
+{%- assign has_start = false -%}{%- if e.start and e.start != "" -%}{%- assign has_start = true -%}{%- endif -%}
+{%- assign has_end = false -%}{%- if e.end and e.end != "" -%}{%- assign has_end = true -%}{%- endif -%}
+{%- assign has_org = false -%}{%- if e.org and e.org != "" -%}{%- assign has_org = true -%}{%- endif -%}
+{%- assign has_place = false -%}{%- if e.place and e.place != "" -%}{%- assign has_place = true -%}{%- endif -%}
+<li class="cv-entry">
+  <div class="cv-head">
+    <h3 class="cv-title">{{ e.title }}</h3>
+    {%- if has_start or has_end %}
+    <p class="cv-dates">
+      {%- if has_start %}<span>{{ e.start }}</span><span class="sep"> – </span>{% endif -%}
+      {%- if has_end %}<span>{{ e.end }}</span>{% elsif has_start %}<span>{{ cui.present }}</span>{% endif -%}
+    </p>
+    {%- endif %}
+  </div>
+  {%- if has_org or has_place %}
+  <p class="cv-org">
+    {%- if has_org %}<span>{{ e.org }}</span>{% endif -%}
+    {%- if has_org and has_place %}<span class="sep">, </span>{% endif -%}
+    {%- if has_place %}<span class="cv-place">{{ e.place }}</span>{% endif -%}
+  </p>
+  {%- endif -%}
+  {%- if include.edu %}
+  <dl class="cv-facts">
+    {%- if e.gpa and e.gpa != "" %}<div><dt>{{ cui.gpa }}</dt><dd>{{ e.gpa }}</dd></div>{% endif -%}
+    {%- if e.thesis and e.thesis != "" %}<div><dt>{{ cui.thesis }}</dt><dd>{{ e.thesis }}</dd></div>{% endif -%}
+    {%- if e.advisor and e.advisor != "" %}<div><dt>{{ cui.advisor }}</dt><dd>{{ e.advisor }}</dd></div>{% endif -%}
+  </dl>
+  {%- endif -%}
+  {%- if e.bullets and e.bullets.size > 0 %}
+  <ul class="cv-bullets">
+    {%- for b in e.bullets %}
+    <li>{{ b | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+</li>

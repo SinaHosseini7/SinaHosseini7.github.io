@@ -1,0 +1,12 @@
+- name: Heat Transfer & CFD of Thermal-Fluid Systems
+  anchor: heat-transfer-cfd
+  icon: flame
+  short: "I use CFD to model conduction, convection, and radiation in industrial equipment, from a steel-plant ladle carrier to insulated LPG lines."
+- name: Thermal Insulation & Porous Materials
+  anchor: insulation-porous
+  icon: layers
+  short: "I work with aerogels and vacuum-based insulation, from synthesis and testing to finding the thermal bridges that weaken them in service."
+- name: Thermal Management & Energy Storage
+  anchor: thermal-management-storage
+  icon: snowflake
+  short: "I study how to keep batteries cool next to strong heat sources and how to limit heat leak and boil-off in cryogenic tanks."

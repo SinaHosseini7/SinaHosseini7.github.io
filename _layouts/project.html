@@ -1,0 +1,128 @@
+---
+layout: default
+---
+{%- assign ui = site.data.ui -%}
+{%- assign pui = ui.projects -%}
+{%- assign slug = page.slug -%}
+{%- include project-order.html -%}
+{%- assign idx = -1 -%}
+{%- for pr in ordered_projects -%}
+  {%- if pr.url == page.url -%}{%- assign idx = forloop.index0 -%}{%- endif -%}
+{%- endfor -%}
+{%- assign last_idx = ordered_projects.size | minus: 1 -%}
+{%- assign prev_proj = nil -%}{%- assign next_proj = nil -%}
+{%- if idx > 0 -%}{%- assign pi = idx | minus: 1 -%}{%- assign prev_proj = ordered_projects[pi] -%}{%- endif -%}
+{%- if idx >= 0 and idx < last_idx -%}{%- assign ni = idx | plus: 1 -%}{%- assign next_proj = ordered_projects[ni] -%}{%- endif -%}
+{%- assign theme = nil -%}
+{%- if page.theme and page.theme != "" -%}{%- assign theme = site.data.themes | where: "anchor", page.theme | first -%}{%- endif -%}
+<article class="project">
+  <header class="page-head measure">
+    <h1>{{ page.title }}</h1>
+    {%- if page.summary and page.summary != "" %}
+    <p class="lead">{{ page.summary }}</p>
+    {%- endif %}
+  </header>
+
+  <section class="glance measure" aria-labelledby="glance-heading">
+    <h2 id="glance-heading" class="glance-title">{{ pui.at_a_glance }}</h2>
+    <dl class="glance-list">
+      {%- if page.role and page.role != "" %}
+      <div><dt>{{ pui.role }}</dt><dd>{{ page.role }}</dd></div>
+      {%- endif -%}
+      {%- if page.organization and page.organization != "" %}
+      <div><dt>{{ pui.organization }}</dt><dd>{{ page.organization }}</dd></div>
+      {%- endif -%}
+      {%- if page.period and page.period != "" %}
+      <div><dt>{{ pui.period }}</dt><dd>{{ page.period }}</dd></div>
+      {%- endif -%}
+      {%- if page.tools and page.tools.size > 0 %}
+      <div><dt>{{ pui.tools }}</dt><dd><ul class="tags">{% for t in page.tools %}<li>{{ t }}</li>{% endfor %}</ul></dd></div>
+      {%- endif -%}
+      {%- if page.outputs and page.outputs.size > 0 %}
+      <div><dt>{{ pui.outputs }}</dt><dd><ul class="glance-outputs">
+        {%- for o in page.outputs -%}
+        {%- if o.url and o.url != "" -%}
+          {%- assign first = o.url | slice: 0, 1 -%}
+          {%- if first == "/" -%}{%- assign ohref = o.url | relative_url -%}{%- else -%}{%- assign ohref = o.url -%}{%- endif %}
+        <li><a href="{{ ohref }}">{{ o.label }}</a></li>
+        {%- else %}
+        <li>{{ o.label }}</li>
+        {%- endif -%}
+        {%- endfor %}
+      </ul></dd></div>
+      {%- endif -%}
+      {%- if theme %}
+      <div><dt>{{ pui.theme }}</dt><dd><a href="{{ '/research/' | relative_url }}#{{ theme.anchor }}">{{ theme.name }}</a></dd></div>
+      {%- endif %}
+    </dl>
+  </section>
+
+  <div class="prose measure project-body">
+{{ content }}
+  </div>
+
+  {%- comment -%} Related (A12): matching publications first, then outputs with a url, without duplicates. {%- endcomment -%}
+  {%- assign seen = "|" -%}
+  {%- assign rel_html = "" -%}
+  {%- assign pubs = site.data.publications -%}
+  {%- assign all_pubs = "" | split: "" -%}
+  {%- if pubs.journal %}{% assign all_pubs = all_pubs | concat: pubs.journal %}{% endif -%}
+  {%- if pubs.conference %}{% assign all_pubs = all_pubs | concat: pubs.conference %}{% endif -%}
+  {%- if pubs.in_preparation %}{% assign all_pubs = all_pubs | concat: pubs.in_preparation %}{% endif -%}
+  {%- for pub in all_pubs -%}
+    {%- if pub.project and pub.project == slug -%}
+      {%- assign plink = "" -%}
+      {%- assign doi_url = "" -%}
+      {%- if pub.doi and pub.doi != "" -%}{%- assign doi_url = pub.doi | prepend: "https://doi.org/" -%}{%- endif -%}
+      {%- if pub.pdf and pub.pdf != "" -%}{%- assign plink = pub.pdf -%}
+      {%- elsif doi_url != "" -%}{%- assign plink = doi_url -%}
+      {%- elsif pub.url and pub.url != "" -%}{%- assign plink = pub.url -%}{%- endif -%}
+      {%- if pub.pdf and pub.pdf != "" -%}{%- assign seen = seen | append: pub.pdf | append: "|" -%}{%- endif -%}
+      {%- if doi_url != "" -%}{%- assign seen = seen | append: doi_url | append: "|" -%}{%- endif -%}
+      {%- if pub.url and pub.url != "" -%}{%- assign seen = seen | append: pub.url | append: "|" -%}{%- endif -%}
+      {%- if plink != "" -%}
+        {%- assign first = plink | slice: 0, 1 -%}
+        {%- if first == "/" -%}{%- assign plink = plink | relative_url -%}{%- endif -%}
+        {%- capture item %}<li><a href="{{ plink }}">{{ pub.title }}</a></li>{% endcapture -%}
+      {%- else -%}
+        {%- capture item %}<li>{{ pub.title }}</li>{% endcapture -%}
+      {%- endif -%}
+      {%- assign rel_html = rel_html | append: item -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- for o in page.outputs -%}
+    {%- if o.url and o.url != "" -%}
+      {%- assign key = "|" | append: o.url | append: "|" -%}
+      {%- unless seen contains key -%}
+        {%- assign first = o.url | slice: 0, 1 -%}
+        {%- if first == "/" -%}{%- assign ohref = o.url | relative_url -%}{%- else -%}{%- assign ohref = o.url -%}{%- endif -%}
+        {%- capture item %}<li><a href="{{ ohref }}">{{ o.label }}</a></li>{% endcapture -%}
+        {%- assign rel_html = rel_html | append: item -%}
+        {%- assign seen = seen | append: o.url | append: "|" -%}
+      {%- endunless -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if rel_html != "" %}
+
+  <section class="related measure" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="section-title">{{ pui.related }}</h2>
+    <ul class="related-list">{{ rel_html }}</ul>
+  </section>
+  {%- endif %}
+
+  <div class="pager measure">
+    {%- if prev_proj %}
+    <a class="pager-link pager-prev" href="{{ prev_proj.url | relative_url }}" rel="prev">
+      <span class="pager-label">{{ pui.previous }}</span>
+      <span class="pager-title">{{ prev_proj.title }}</span>
+    </a>
+    {%- endif -%}
+    {%- if next_proj %}
+    <a class="pager-link pager-next" href="{{ next_proj.url | relative_url }}" rel="next">
+      <span class="pager-label">{{ pui.next }}</span>
+      <span class="pager-title">{{ next_proj.title }}</span>
+    </a>
+    {%- endif %}
+  </div>
+  <p class="pager-all measure"><a href="{{ '/projects/' | relative_url }}">{{ pui.all }}</a></p>
+</article>
